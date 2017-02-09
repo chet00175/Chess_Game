@@ -3,6 +3,13 @@ var CHESS_PIECES = { WHITE_PAWN : "WHITE_PAWN", WHITE_BISHOP : "WHITE_BISHOP", W
 	BLACK_PAWN : "BLACK_PAWN", BLACK_BISHOP : "BLACK_BISHOP", BLACK_KNIGHT : "BLACK_KNIGHT", BLACK_ROOK : "BLACK_ROOK", BLACK_KING : "BLACK_KING", BLACK_QUEEN : "BLACK_QUEEN" };
 
 
+// The chess piece that the user currently selected. By default value is no_piece.
+var selectedPiece = "no_piece";
+
+// The current turn.
+var turn = "WHITE";
+
+
 // Declaring global variables to keep track of the position of the kings on the board.
 var whiteKingPos;
 var blackKingPos;
@@ -211,6 +218,22 @@ function placePieces() {
 	$(img).height(pieceHeight);
 	img.appendTo('#84');
 
+	// The click event function for each square on the board.
+	$('.cell').click(function(){
+		var cellPiece = $(this).data().piece;
+		var position = $(this).data().position;
+	});
+
+}
+
+// Helper functions to determine if a piece is black or white.
+
+function isWhitePiece(piece) {
+	return (piece === CHESS_PIECES.WHITE_PAWN || piece === CHESS_PIECES.WHITE_BISHOP || piece === CHESS_PIECES.WHITE_KNIGHT || piece === CHESS_PIECES.WHITE_QUEEN || piece === CHESS_PIECES.WHITE_KING || piece === CHESS_PIECES.WHITE_ROOK);
+}
+
+function isBlackPiece(piece) {
+	return (piece === CHESS_PIECES.BLACK_KING || piece === CHESS_PIECES.BLACK_PAWN || piece === CHESS_PIECES.BLACK_QUEEN || piece === CHESS_PIECES.BLACK_BISHOP || piece === CHESS_PIECES.BLACK_KNIGHT || piece === CHESS_PIECES.BLACK_ROOK);
 }
 
 
@@ -219,5 +242,6 @@ function initGame() {
 	var table = createBoard();
 	$('#board').append(table);
 
+	// initial setup, place white and black pieces
 	placePieces();
 }

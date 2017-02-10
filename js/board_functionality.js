@@ -222,8 +222,44 @@ function placePieces() {
 	$('.cell').click(function(){
 		var cellPiece = $(this).data().piece;
 		var position = $(this).data().position;
+
+		if (cellPiece === "empty" && selectedPiece === "no_piece") {
+			// Don't do anything if the square is empty and no piece has been selected
+		}
+		else if (cellPiece !== "empty" && selectedPiece === "no_piece") {
+			// selecting a piece to move. Ensuring that the chess piece is selected according to the turn.
+			if ((turn === "WHITE" && !isWhitePiece(cellPiece)) || (turn === "BLACK" && !isBlackPiece(cellPiece))) {
+				alert('Wrong turn');
+				return;
+			}
+			selectedPiece = cellPiece;
+			selectedPiecePos = position; // Stores the current position of the selected piece.
+
+			// Highlight the square of the piece...
+		}
+		else if (selectedPiece !== "no_piece" && cellPiece !== "empty") {
+			if ((isWhitePiece(selectedPiece) && isWhitePiece(cellPiece)) || (isBlackPiece(selectedPiece) && isBlackPiece(cellPiece))) {
+				selectedPiece = cellPiece;
+			}
+			else {
+				var validMove = movePiece(selectedPiece, selectedPiecePos, position, true); // Determine if the move is a valid one
+				if (validMove) {
+					
+				}
+				else alert("Cant move");
+				selectedPiece = "no_piece"; // set selected piece back to no piece again.
+			}
+		}
 	});
 
+}
+
+// Method for determining whether given chess piece move is valid. 
+// 'piece' is the given piece to be moved, 'startPos' is the starting position of the piece
+// 'endPos' is the position that the piece has to be moved to.
+// 'otherPiece' is true if there is another piece at endPos or false otherwise.
+function movePiece(piece, startPos, endPos, otherPiece) {
+	
 }
 
 // Helper functions to determine if a piece is black or white.

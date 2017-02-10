@@ -244,11 +244,35 @@ function placePieces() {
 			else {
 				var validMove = movePiece(selectedPiece, selectedPiecePos, position, true); // Determine if the move is a valid one
 				if (validMove) {
-					
+					$('#'+selectedPiecePos.y+''+selectedPiecePos.x).find('img').remove();
+					$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece','empty');
+
+					$('#'+position.y+''+position.x).data('piece',selectedPiece);
+					$('#'+position.y+''+position.x).find('img').attr('src', 'images/' + selectedPiece + '.ico');
+
+					turn = turn === "WHITE" ? "BLACK" : "WHITE";
 				}
 				else alert("Cant move");
 				selectedPiece = "no_piece"; // set selected piece back to no piece again.
 			}
+		}
+		else if (selectedPiece !== "no_piece" && cellPiece === "empty") {
+			var validMove = movePiece(selectedPiece, selectedPiecePos, position, false);
+			if (validMove) {
+				$('#'+selectedPiecePos.y+''+selectedPiecePos.x).find('img').remove();
+				$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece','empty');
+
+				$('#'+position.y+''+position.x).data('piece',selectedPiece);
+				var img = $('<img>');
+				img.attr('src', 'images/' + selectedPiece + '.ico');
+				$(img).width(pieceWidth);
+				$(img).height(pieceHeight);
+				img.appendTo('#'+position.y+''+position.x);
+
+				turn = turn === "WHITE" ? "BLACK" : "WHITE";
+			}
+			else alert("Cant move");
+			selectedPiece = "no_piece";
 		}
 	});
 
@@ -259,7 +283,33 @@ function placePieces() {
 // 'endPos' is the position that the piece has to be moved to.
 // 'otherPiece' is true if there is another piece at endPos or false otherwise.
 function movePiece(piece, startPos, endPos, otherPiece) {
-	
+	if (piece === CHESS_PIECES.WHITE_PAWN || piece === CHESS_PIECES.BLACK_PAWN) {
+		if (otherPiece === true) {
+			if (isWhitePiece(piece)) {
+				if (endPos.y === startPos.y + 1 && (startPos.x+1 === endPos.x || startPos.x-1 === endPos.x)) return true;
+			}
+			else {
+				if (endPos.y === startPos.y - 1 && (startPos.x+1 === endPos.x || startPos.x-1 === endPos.x)) return true;
+			}
+		}
+		else {
+			if (isWhitePiece(piece)) {
+				if (startPos.y === 2 && endPos.y === 4 && startPos.x === endPos.x) return true;
+				else if (endPos.y === startPos.y + 1 && startPos.x === endPos.x) return true;
+			}
+			else {
+				if (startPos.y === 7 && endPos.y === 5 && startPos.x === endPos.x) return true;
+				else if (endPos.y === startPos.y - 1 && startPos.x === endPos.x) return true;
+			}
+		}
+	}
+	else if (piece === CHESS_PIECES.WHITE_KING || piece === CHESS_PIECES.BLACK_KING) {
+		if ((Math.abs(startPos.x - endPos.x) === 1 && startPos.y - endPos.y === 0) || (Math.abs(startPos.y - endPos.y) === 1 && startPos.x - endPos.x === 0) 
+			|| (Math.abs(startPos.y - endPos.y) === 1 && Math.abs(startPos.x - endPos.x) === 1)) return true;
+	}
+	else if (piece === CHESS_PIECES.WHITE_KNIGHT || piece === CHESS_PIECES.BLACK_KNIGHT) {
+		if ((Math.abs(startPos.y - endPos.y) === 2 && Math.abs(startPos.x - endPos.x) === 1) || (Math.abs(startPos.y - endPos.y) === 1 && Math.abs(startPos.x - endPos.x) === 2)) return true;
+	}
 }
 
 // Helper functions to determine if a piece is black or white.

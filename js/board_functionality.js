@@ -310,6 +310,87 @@ function movePiece(piece, startPos, endPos, otherPiece) {
 	else if (piece === CHESS_PIECES.WHITE_KNIGHT || piece === CHESS_PIECES.BLACK_KNIGHT) {
 		if ((Math.abs(startPos.y - endPos.y) === 2 && Math.abs(startPos.x - endPos.x) === 1) || (Math.abs(startPos.y - endPos.y) === 1 && Math.abs(startPos.x - endPos.x) === 2)) return true;
 	}
+	else if (piece === CHESS_PIECES.WHITE_ROOK || piece === CHESS_PIECES.BLACK_ROOK) {
+		if ((startPos.x === endPos.x || startPos.y === endPos.y)  && checkPath("rook", startPos, endPos)) return true;
+	}
+	else if (piece === CHESS_PIECES.WHITE_BISHOP || piece === CHESS_PIECES.BLACK_BISHOP) {
+		if ((Math.abs(startPos.y - endPos.y) === Math.abs(startPos.x - endPos.x)) && checkPath("bishop", startPos, endPos)) return true;
+	}
+	else if (piece === CHESS_PIECES.WHITE_QUEEN || piece === CHESS_PIECES.BLACK_QUEEN) {
+		if (movePiece(CHESS_PIECES.WHITE_ROOK, startPos, endPos, otherPiece) || movePiece(CHESS_PIECES.WHITE_BISHOP, startPos, endPos, otherPiece)) return true;
+	}
+
+	return false;
+}
+
+// Check if any pieces come in the path of a rook, queen or bishop while making a move.
+function checkPath(type, start, end) {
+	if (type === "rook") {
+		if (start.x === end.x) {
+			if (end.y > start.y) {
+				for (i = start.y+1; i < end.y; i++) {
+					var isPiece = $('#'+i+''+start.x).data().piece === "empty" ? false : true;
+					if (isPiece) return false;
+				}
+			}
+			else {
+				for (i = start.y-1; i > end.y; i--) {
+					var isPiece = $('#'+i+''+start.x).data().piece === "empty" ? false : true;
+					if (isPiece) return false;
+				}
+			}
+		}
+		else {
+			if (end.x > start.x) {
+				for (i = start.x+1; i < end.x; i++) {
+					var isPiece = $('#'+start.y+''+i).data().piece === "empty" ? false : true;
+					if (isPiece) return false;
+				}
+			}
+			else {
+				for (i = start.x-1; i > end.x; i--) {
+					var isPiece = $('#'+start.y+''+i).data().piece === "empty" ? false : true;
+					if (isPiece) return false;
+				}
+			}
+		}
+	}
+	else if (type === "bishop") {
+		if (end.x > start.x && end.y > start.y) {
+			var j = start.y+1;
+			for (i = start.x+1; i < end.x; i++) {
+				var isPiece = $('#'+j+''+i).data().piece === "empty" ? false : true;
+				if (isPiece) return false;
+				j++;
+			}
+		}
+		else if (end.x > start.x && end.y < start.y) {
+			var j = start.y-1;
+			for (i = start.x+1; i < end.x; i++) {
+				var isPiece = $('#'+j+''+i).data().piece === "empty" ? false : true;
+				if (isPiece) return false;
+				j--;
+			}
+		}
+		else if (end.x < start.x && end.y > start.y) {
+			var j = start.y+1;
+			for (i = start.x-1; i > end.x; i--) {
+				var isPiece = $('#'+j+''+i).data().piece === "empty" ? false : true;
+				if (isPiece) return false;
+				j++;
+			}
+		}
+		else {
+			var j = start.y-1;
+			for (i = start.x-1; i > end.x; i--) {
+				var isPiece = $('#'+j+''+i).data().piece === "empty" ? false : true;
+				if (isPiece) return false;
+				j--;
+			}
+		}
+	}
+
+	return true;
 }
 
 // Helper functions to determine if a piece is black or white.

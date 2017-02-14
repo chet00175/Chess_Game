@@ -48,6 +48,7 @@ function createBoard() {
 			$(cell).css('textAlign', 'center'); // Ensure chess pieces are on the centre of the square.
 			$(cell).data('piece', 'empty'); // indicates that the cell currently has no chess piece in it.
 			$(cell).data('position', new BoardPosition(j,i));
+			$(cell).data('backgroundColor', colour);
 			
 			$(row).append(cell);
 			// Switch between square colours on the board.
@@ -235,25 +236,35 @@ function placePieces() {
 			selectedPiece = cellPiece;
 			selectedPiecePos = position; // Stores the current position of the selected piece.
 
-			// Highlight the square of the piece...
+			$('#'+selectedPiecePos.y+''+selectedPiecePos.x).css('backgroundColor', '#00FF00'); // highlight the cell
 		}
 		else if (selectedPiece !== "no_piece" && cellPiece !== "empty") {
 			if ((isWhitePiece(selectedPiece) && isWhitePiece(cellPiece)) || (isBlackPiece(selectedPiece) && isBlackPiece(cellPiece))) {
+				if (typeof selectedPiecePos !== 'undefined') {
+					// Remove highlighting if required.	
+					$('#'+selectedPiecePos.y+''+selectedPiecePos.x).css('backgroundColor', $('#'+selectedPiecePos.y+''+selectedPiecePos.x).data().backgroundColor);
+				}	 
+
 				selectedPiece = cellPiece;
+				selectedPiecePos = position; // Stores the current position of the selected piece.
+
+				$('#'+selectedPiecePos.y+''+selectedPiecePos.x).css('backgroundColor', '#00FF00'); // highlight the cell
 			}
 			else {
 				var validMove = movePiece(selectedPiece, selectedPiecePos, position, true); // Determine if the move is a valid one
 				if (validMove) {
 					$('#'+selectedPiecePos.y+''+selectedPiecePos.x).find('img').remove();
 					$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece','empty');
+					$('#'+selectedPiecePos.y+''+selectedPiecePos.x).css('backgroundColor', $('#'+selectedPiecePos.y+''+selectedPiecePos.x).data().backgroundColor); // Remove highlighting
 
 					$('#'+position.y+''+position.x).data('piece',selectedPiece);
 					$('#'+position.y+''+position.x).find('img').attr('src', 'images/' + selectedPiece + '.ico');
 
 					turn = turn === "WHITE" ? "BLACK" : "WHITE";
+
+					selectedPiece = "no_piece"; // set selected piece back to no piece again.
 				}
 				else alert("Cant move");
-				selectedPiece = "no_piece"; // set selected piece back to no piece again.
 			}
 		}
 		else if (selectedPiece !== "no_piece" && cellPiece === "empty") {
@@ -261,6 +272,7 @@ function placePieces() {
 			if (validMove) {
 				$('#'+selectedPiecePos.y+''+selectedPiecePos.x).find('img').remove();
 				$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece','empty');
+				$('#'+selectedPiecePos.y+''+selectedPiecePos.x).css('backgroundColor', $('#'+selectedPiecePos.y+''+selectedPiecePos.x).data().backgroundColor); // Remove highlighting
 
 				$('#'+position.y+''+position.x).data('piece',selectedPiece);
 				var img = $('<img>');
@@ -270,9 +282,10 @@ function placePieces() {
 				img.appendTo('#'+position.y+''+position.x);
 
 				turn = turn === "WHITE" ? "BLACK" : "WHITE";
+
+				selectedPiece = "no_piece";
 			}
 			else alert("Cant move");
-			selectedPiece = "no_piece";
 		}
 	});
 

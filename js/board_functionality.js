@@ -31,12 +31,32 @@ function createBoard() {
 	var white_square = "#e8d5a9";
 
 	var colour = white_square;
+
+	// Create first row containing the letter labels:
+	var labelRow = $("<tr></tr>");
+	var empty = $("<td></td>")
+	$(labelRow).append(empty);
+	var letters = "ABCDEFGH";
+	for(var i = 0; i < letters.length; i++) {
+		// Create label element in front marking the rows:
+		var colLabel = $("<td></td>");
+		$(colLabel).css('height',25);
+		$(colLabel).css('textAlign','center');
+		$(labelRow).append(colLabel);
+		$(colLabel).html(letters[i]);
+	}
+
+	$(table).append(labelRow);
 	
 	// Creating table cells to represent the squares in the chess board. 64 in total.
 	for(var i = 8; i >= 1; i--) {
 		var row = $("<tr></tr>");
 		
-		// Create row element
+		// Create label element in front marking the rows:
+		var rowLabel = $("<td></td>");
+		$(rowLabel).css('width',25);
+		$(row).append(rowLabel);
+		$(rowLabel).html(i);
 		
 		for(var j = 1; j <= 8 ; j++) {
 			var cell = $("<td></td>");
@@ -63,11 +83,34 @@ function createBoard() {
 
 		if (colour === white_square) {
 				colour = black_square;
-			}
-			else {
+		}
+		else {
 				colour = white_square;
-			}
+		}
+
+		// Create label element in front marking the rows:
+		var rowLabel = $("<td></td>");
+		$(rowLabel).css('width',25);
+		$(rowLabel).css('textAlign','right');
+		$(row).append(rowLabel);
+		$(rowLabel).html(i);
 	}
+
+	// Create last row containing the letter labels:
+	var labelRow = $("<tr></tr>");
+	var empty = $("<td></td>")
+	$(labelRow).append(empty);
+	var letters = "ABCDEFGH";
+	for(var i = 0; i < letters.length; i++) {
+		// Create label element in front marking the rows:
+		var colLabel = $("<td></td>");
+		$(colLabel).css('height',25);
+		$(colLabel).css('textAlign','center');
+		$(labelRow).append(colLabel);
+		$(colLabel).html(letters[i]);
+	}
+	
+	$(table).append(labelRow);
 	
 	return table;
 }

@@ -568,6 +568,125 @@ function isWhiteCheck(pos) {
 	return false;
 }
 
+function isBlackCheck(pos) {
+	// First check pawns
+	if ($('#'+(pos.y-1)+''+(pos.x+1)).data('piece') === CHESS_PIECES.WHITE_PAWN || $('#'+(pos.y-1)+''+(pos.x-1)).data('piece') === CHESS_PIECES.WHITE_PAWN) {
+		return true;
+	}
+
+	// Checking for opponent's rook or queen on left, right, straight and back directions.
+
+	for (i = pos.y+1; i <= 8; i++) {
+		var piece = $('#'+i+''+pos.x).data().piece;
+		if (piece !== "empty") {
+			if (piece === CHESS_PIECES.WHITE_ROOK || piece === CHESS_PIECES.WHITE_QUEEN) {
+				return true;
+			}
+			else {
+				break;
+			}
+		}
+	}
+	for (i = pos.y-1; i >= 1; i--) {
+		var piece = $('#'+i+''+pos.x).data().piece;
+		if (piece !== "empty") {
+			if (piece === CHESS_PIECES.WHITE_ROOK || piece === CHESS_PIECES.WHITE_QUEEN) {
+				return true;
+			}
+			else {
+				break;
+			}
+		}
+	}
+	for (i = pos.x+1; i <= 8; i++) {
+		var piece = $('#'+pos.y+''+i).data().piece;
+		if (piece !== "empty") {
+			if (piece === CHESS_PIECES.WHITE_ROOK || piece === CHESS_PIECES.WHITE_QUEEN) {
+				return true;
+			}
+			else {
+				break;
+			}
+		}
+	}
+	for (i = pos.x-1; i >= 1; i--) {
+		var piece = $('#'+pos.y+''+i).data().piece;
+		if (piece !== "empty") {
+			if (piece === CHESS_PIECES.WHITE_ROOK || piece === CHESS_PIECES.WHITE_QUEEN) {
+				return true;
+			}
+			else {
+				break;
+			}
+		}
+	}
+
+	// Checking for opponent's bishop or queen on left, right, straight and back directions.
+
+	var j = pos.y+1;
+	for (i = pos.x+1; i <= 8 && j <= 8; i++) {
+		var piece = $('#'+j+''+i).data().piece;
+		if (piece !== "empty") {
+			if (piece === CHESS_PIECES.WHITE_BISHOP || piece === CHESS_PIECES.WHITE_QUEEN) {
+				return true;
+			}
+			else {
+				break;
+			}
+		}
+		j += 1;
+	}
+	j = pos.y+1;
+	for (i = pos.x-1; i >= 1 && j <= 8; i--) {
+		var piece = $('#'+j+''+i).data().piece;
+		if (piece !== "empty") {
+			if (piece === CHESS_PIECES.WHITE_BISHOP || piece === CHESS_PIECES.WHITE_QUEEN) {
+				return true;
+			}
+			else {
+				break;
+			}
+		}
+		j += 1;
+	}
+	j = pos.y-1;
+	for (i = pos.x-1; i >= 1 && j >= 1; i--) {
+		var piece = $('#'+j+''+i).data().piece;
+		if (piece !== "empty") {
+			if (piece === CHESS_PIECES.WHITE_BISHOP || piece === CHESS_PIECES.WHITE_QUEEN) {
+				return true;
+			}
+			else {
+				break;
+			}
+		}
+		j -= 1;
+	}
+	j = pos.y-1;
+	for (i = pos.x+1; i <= 8 && j >= 1; i++) {
+		var piece = $('#'+j+''+i).data().piece;
+		if (piece !== "empty") {
+			if (piece === CHESS_PIECES.WHITE_BISHOP || piece === CHESS_PIECES.WHITE_QUEEN) {
+				return true;
+			}
+			else {
+				break;
+			}
+		}
+		j -= 1;
+	}
+
+	// Check for opponent's knight in all directions around the king:
+	if ($('#'+(pos.y+2)+''+(pos.x+1)).data('piece') === CHESS_PIECES.WHITE_KNIGHT || $('#'+(pos.y+2)+''+(pos.x-1)).data('piece') === CHESS_PIECES.WHITE_KNIGHT || 
+			$('#'+(pos.y-2)+''+(pos.x+1)).data('piece') === CHESS_PIECES.WHITE_KNIGHT || $('#'+(pos.y-2)+''+(pos.x-1)).data('piece') === CHESS_PIECES.WHITE_KNIGHT ||
+			$('#'+(pos.y+1)+''+(pos.x+2)).data('piece') === CHESS_PIECES.WHITE_KNIGHT || $('#'+(pos.y-1)+''+(pos.x+2)).data('piece') === CHESS_PIECES.WHITE_KNIGHT ||
+			$('#'+(pos.y+1)+''+(pos.x-2)).data('piece') === CHESS_PIECES.WHITE_KNIGHT || $('#'+(pos.y-1)+''+(pos.x-2)).data('piece') === CHESS_PIECES.WHITE_KNIGHT) {
+		return true;
+	}
+
+	return false;
+}
+
 // Helper functions to determine if a piece is black or white.
 
 function isWhitePiece(piece) {

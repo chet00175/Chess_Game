@@ -303,6 +303,22 @@ function placePieces() {
 					$('#'+position.y+''+position.x).data('piece',selectedPiece);
 					$('#'+position.y+''+position.x).find('img').attr('src', 'images/' + selectedPiece + '.ico');
 
+					if (selectedPiece === CHESS_PIECES.WHITE_KING) {
+						whiteKingPos = position;
+					}
+					if (selectedPiece === CHESS_PIECES.BLACK_KING) {
+						blackKingPos = position;
+					}
+					var whiteCheck = isWhiteCheck(whiteKingPos);
+					var blackCheck = isBlackCheck(blackKingPos);
+					
+					if (whiteCheck) {
+						alert('Check');
+					}
+					else if (blackCheck) {
+						alert('Check');
+					}
+
 					turn = turn === "WHITE" ? "BLACK" : "WHITE";
 
 					selectedPiece = "no_piece"; // set selected piece back to no piece again.
@@ -323,6 +339,22 @@ function placePieces() {
 				$(img).width(pieceWidth);
 				$(img).height(pieceHeight);
 				img.appendTo('#'+position.y+''+position.x);
+
+				if (selectedPiece === CHESS_PIECES.WHITE_KING) {
+						whiteKingPos = position;
+				}
+				if (selectedPiece === CHESS_PIECES.BLACK_KING) {
+					blackKingPos = position;
+				}
+				var whiteCheck = isWhiteCheck(whiteKingPos);
+				var blackCheck = isBlackCheck(blackKingPos);
+				
+				if (whiteCheck) {
+					alert('Check');
+				}
+				else if (blackCheck) {
+					alert('Check');
+				}
 
 				turn = turn === "WHITE" ? "BLACK" : "WHITE";
 

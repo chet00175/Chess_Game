@@ -14,6 +14,16 @@ var turn = "WHITE";
 var whiteKingPos;
 var blackKingPos;
 
+// Boolean values to keep track of whether a king is checked
+var whiteChecked = false;
+var blackChecked = false;
+
+// Boolean values to keep track of whether a king has been checkmated
+var whiteCheckmated = false;
+var blackCheckmated = false;
+
+var checkMove = false;
+
 
 
 
@@ -267,6 +277,29 @@ function placePieces() {
 		var cellPiece = $(this).data().piece;
 		var position = $(this).data().position;
 
+		// Check if white king or black king have been checked.
+		if ((blackChecked || whiteChecked) && !checkMove) {
+			if ((turn === "WHITE" && !isWhitePiece(cellPiece)) || (turn === "BLACK" && !isBlackPiece(cellPiece))) {
+				alert('Wrong turn');
+				return;
+			}
+
+			if (whiteChecked) {
+				if (cellPiece !== CHESS_PIECES.WHITE_KING) {
+					alert('White king is checked! Invalid move!');
+					return;
+				}
+			}
+			else {
+				if (cellPiece !== CHESS_PIECES.BLACK_KING) {
+					alert('Black king is checked! Invalid move!');
+					return;
+				}
+			}
+
+			checkMove = true;
+		}
+
 		if (cellPiece === "empty" && selectedPiece === "no_piece") {
 			// Don't do anything if the square is empty and no piece has been selected
 		}
@@ -282,7 +315,22 @@ function placePieces() {
 			$('#'+selectedPiecePos.y+''+selectedPiecePos.x).css('backgroundColor', '#00FF00'); // highlight the cell
 		}
 		else if (selectedPiece !== "no_piece" && cellPiece !== "empty") {
+			// Select another piece of your own colour.
 			if ((isWhitePiece(selectedPiece) && isWhitePiece(cellPiece)) || (isBlackPiece(selectedPiece) && isBlackPiece(cellPiece))) {
+				// If a king has to move out of a check don't let the player select another piece.
+				if (checkMove) {
+					if (isWhitePiece(selectedPiece)) {
+						alert('White king is checked! Invalid move!');
+					}
+					else {
+						alert('Black king is checked! Invalid move!');
+					}
+					selectedPiece = "no_piece";
+					$('#'+selectedPiecePos.y+''+selectedPiecePos.x).css('backgroundColor', $('#'+selectedPiecePos.y+''+selectedPiecePos.x).data().backgroundColor);
+					checkMove = false;
+					return;
+				}
+
 				if (typeof selectedPiecePos !== 'undefined') {
 					// Remove highlighting if required.	
 					$('#'+selectedPiecePos.y+''+selectedPiecePos.x).css('backgroundColor', $('#'+selectedPiecePos.y+''+selectedPiecePos.x).data().backgroundColor);
@@ -294,12 +342,15 @@ function placePieces() {
 				$('#'+selectedPiecePos.y+''+selectedPiecePos.x).css('backgroundColor', '#00FF00'); // highlight the cell
 			}
 			else {
+				checkMove = false;
+
 				var validMove = movePiece(selectedPiece, selectedPiecePos, position, true); // Determine if the move is a valid one
 				if (validMove) {
 					$('#'+selectedPiecePos.y+''+selectedPiecePos.x).find('img').remove();
 					$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece','empty');
 					$('#'+selectedPiecePos.y+''+selectedPiecePos.x).css('backgroundColor', $('#'+selectedPiecePos.y+''+selectedPiecePos.x).data().backgroundColor); // Remove highlighting
 
+					var oldPiece = $('#'+position.y+''+position.x).data().piece;
 					$('#'+position.y+''+position.x).data('piece',selectedPiece);
 					$('#'+position.y+''+position.x).find('img').attr('src', 'images/' + selectedPiece + '.ico');
 
@@ -314,9 +365,37 @@ function placePieces() {
 					
 					if (whiteCheck) {
 						alert('Check');
+						whiteChecked = true;
+
+						if (turn === "WHITE") {
+							alert('White king still checked! Move again!');
+							$('#'+position.y+''+position.x).data('piece',oldPiece);
+							$('#'+position.y+''+position.x).find('img').attr('src', 'images/' + oldPiece + '.ico');
+
+							$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece',selectedPiece);
+							$('#'+selectedPiecePos.y+''+selectedPiecePos.x).find('img').attr('src', 'images/' + selectedPiece + '.ico');
+							selectedPiece = "no_piece";
+							return;
+						}
 					}
 					else if (blackCheck) {
 						alert('Check');
+						blackChecked = true;
+
+						if (turn === "BLACK") {
+							alert('Black king still checked! Move again!');
+							$('#'+position.y+''+position.x).data('piece',oldPiece);
+							$('#'+position.y+''+position.x).find('img').attr('src', 'images/' + oldPiece + '.ico');
+
+							$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece',selectedPiece);
+							$('#'+selectedPiecePos.y+''+selectedPiecePos.x).find('img').attr('src', 'images/' + selectedPiece + '.ico');
+							selectedPiece = "no_piece";
+							return;
+						}
+					}
+					else {
+						whiteChecked = false;
+						blackChecked = false;
 					}
 
 					turn = turn === "WHITE" ? "BLACK" : "WHITE";
@@ -327,6 +406,8 @@ function placePieces() {
 			}
 		}
 		else if (selectedPiece !== "no_piece" && cellPiece === "empty") {
+			checkMove = false;
+
 			var validMove = movePiece(selectedPiece, selectedPiecePos, position, false);
 			if (validMove) {
 				$('#'+selectedPiecePos.y+''+selectedPiecePos.x).find('img').remove();
@@ -351,9 +432,51 @@ function placePieces() {
 				
 				if (whiteCheck) {
 					alert('Check');
+					whiteChecked = true;
+
+					if (turn === "WHITE") {
+						alert('White king still checked! Move again!');
+
+						$('#'+position.y+''+position.x).find('img').remove();
+						$('#'+position.y+''+position.x).data('piece','empty');
+
+						$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece',selectedPiece);
+						var img = $('<img>');
+						img.attr('src', 'images/' + selectedPiece + '.ico');
+						$(img).width(pieceWidth);
+						$(img).height(pieceHeight);
+						img.appendTo('#'+selectedPiecePos.y+''+selectedPiecePos.x);
+
+						selectedPiece = "no_piece";
+
+						return;
+					}
 				}
 				else if (blackCheck) {
 					alert('Check');
+					blackChecked = true;
+
+					if (turn === "BLACK") {
+						alert('Black king still checked! Move again!');
+
+						$('#'+position.y+''+position.x).find('img').remove();
+						$('#'+position.y+''+position.x).data('piece','empty');
+
+						$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece',selectedPiece);
+						var img = $('<img>');
+						img.attr('src', 'images/' + selectedPiece + '.ico');
+						$(img).width(pieceWidth);
+						$(img).height(pieceHeight);
+						img.appendTo('#'+selectedPiecePos.y+''+selectedPiecePos.x);
+
+						selectedPiece = "no_piece";
+
+						return;
+					}
+				}
+				else {
+					whiteChecked = false;
+					blackChecked = false;
 				}
 
 				turn = turn === "WHITE" ? "BLACK" : "WHITE";

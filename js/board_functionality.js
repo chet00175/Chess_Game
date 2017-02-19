@@ -311,6 +311,21 @@ function placePieces() {
 					if (selectedPiece === CHESS_PIECES.BLACK_KING) {
 						blackKingPos = position;
 					}
+
+					// Determine if either the white king or black king has been checkmated.
+
+					if (isWhiteCheckMate()) {
+						alert('Checkmate! Black Wins.');
+						$('#board').css('pointer-events','none');
+						return;
+					}
+
+					if (isBlackCheckMate()) {
+						alert('Checkmate! White Wins.');
+						$('#board').css('pointer-events','none');
+						return;
+					}
+
 					var whiteCheck = isWhiteCheck(whiteKingPos);
 					var blackCheck = isBlackCheck(blackKingPos);
 					
@@ -325,6 +340,11 @@ function placePieces() {
 							$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece',selectedPiece);
 							$('#'+selectedPiecePos.y+''+selectedPiecePos.x).find('img').attr('src', 'images/' + selectedPiece + '.ico');
 							selectedPiece = "no_piece";
+
+							if (selectedPiece === CHESS_PIECES.WHITE_KING) {
+								whiteKingPos = selectedPiecePos;
+							}
+
 							return;
 						}
 					}
@@ -338,6 +358,11 @@ function placePieces() {
 
 							$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece',selectedPiece);
 							$('#'+selectedPiecePos.y+''+selectedPiecePos.x).find('img').attr('src', 'images/' + selectedPiece + '.ico');
+
+							if (selectedPiece === CHESS_PIECES.BLACK_KING) {
+								blackKingPos = selectedPiecePos;
+							}
+
 							selectedPiece = "no_piece";
 							return;
 						}
@@ -378,6 +403,13 @@ function placePieces() {
 					$('#board').css('pointer-events','none');
 					return;
 				}
+
+				if (isBlackCheckMate()) {
+					alert('Checkmate! White Wins.');
+					$('#board').css('pointer-events','none');
+					return;
+				}
+
 
 				// Determine if either the white king or black king has been checked.
 
@@ -870,6 +902,68 @@ function isWhiteCheckMate() {
 		if ($('#'+(whiteKingPos.y-1)+''+(whiteKingPos.x+1)).data().piece === "empty") {
 			var pos = new BoardPosition(whiteKingPos.y-1, whiteKingPos.x+1);
 			if (!isWhiteCheck(pos)) return false;
+		}
+	}
+
+	return true;
+}
+
+function isBlackCheckMate() {
+	if (!isBlackCheck(blackKingPos)) return false;
+
+	if (blackKingPos.y+1 <= 8) {
+		if ($('#'+(blackKingPos.y+1)+''+blackKingPos.x).data().piece === "empty") {
+			var pos = new BoardPosition(blackKingPos.y+1, blackKingPos.x);
+			if (!isBlackCheck(pos)) return false;
+		}
+	}
+
+	if (blackKingPos.y-1 >= 1) {
+		if ($('#'+(blackKingPos.y-1)+''+blackKingPos.x).data().piece === "empty") {
+			var pos = new BoardPosition(blackKingPos.y-1, blackKingPos.x);
+			if (!isBlackCheck(pos)) return false;
+		}
+	}
+
+	if (blackKingPos.x+1 <= 8) {
+		if ($('#'+blackKingPos.y+''+(blackKingPos.x+1)).data().piece === "empty") {
+			var pos = new BoardPosition(blackKingPos.y, blackKingPos.x+1);
+			if (!isBlackCheck(pos)) return false;
+		}
+	}
+
+	if (blackKingPos.x-1 >= 1) {
+		if ($('#'+blackKingPos.y+''+(blackKingPos.x-1)).data().piece === "empty") {
+			var pos = new BoardPosition(blackKingPos.y, blackKingPos.x-1);
+			if (!isBlackCheck(pos)) return false;
+		}
+	}
+
+	if (blackKingPos.x+1 <= 8 && blackKingPos.y+1 <= 8) {
+		if ($('#'+(blackKingPos.y+1)+''+(blackKingPos.x+1)).data().piece === "empty") {
+			var pos = new BoardPosition(blackKingPos.y+1, blackKingPos.x+1);
+			if (!isBlackCheck(pos)) return false;
+		}
+	}
+
+	if (blackKingPos.x-1 >= 1 && blackKingPos.y+1 <= 8) {
+		if ($('#'+(blackKingPos.y+1)+''+(blackKingPos.x-1)).data().piece === "empty") {
+			var pos = new BoardPosition(blackKingPos.y+1, blackKingPos.x-1);
+			if (!isBlackCheck(pos)) return false;
+		}
+	}
+
+	if (blackKingPos.x-1 >= 1 && blackKingPos.y-1 >= 1) {
+		if ($('#'+(blackKingPos.y-1)+''+(blackKingPos.x-1)).data().piece === "empty") {
+			var pos = new BoardPosition(blackKingPos.y-1, blackKingPos.x-1);
+			if (!isBlackCheck(pos)) return false;
+		}
+	}
+
+	if (blackKingPos.x+1 >= 1 && blackKingPos.y-1 >= 1) {
+		if ($('#'+(blackKingPos.y-1)+''+(blackKingPos.x+1)).data().piece === "empty") {
+			var pos = new BoardPosition(blackKingPos.y-1, blackKingPos.x+1);
+			if (!isBlackCheck(pos)) return false;
 		}
 	}
 

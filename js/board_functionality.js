@@ -14,16 +14,6 @@ var turn = "WHITE";
 var whiteKingPos;
 var blackKingPos;
 
-// Boolean values to keep track of whether a king is checked
-var whiteChecked = false;
-var blackChecked = false;
-
-// Boolean values to keep track of whether a king has been checkmated
-var whiteCheckmated = false;
-var blackCheckmated = false;
-
-var checkMove = false;
-
 
 
 
@@ -326,10 +316,9 @@ function placePieces() {
 					
 					if (whiteCheck) {
 						alert('Check');
-						whiteChecked = true;
 
 						if (turn === "WHITE") {
-							alert('White king still checked! Move again!');
+							alert('White king checked! Move again!');
 							$('#'+position.y+''+position.x).data('piece',oldPiece);
 							$('#'+position.y+''+position.x).find('img').attr('src', 'images/' + oldPiece + '.ico');
 
@@ -341,10 +330,9 @@ function placePieces() {
 					}
 					else if (blackCheck) {
 						alert('Check');
-						blackChecked = true;
 
 						if (turn === "BLACK") {
-							alert('Black king still checked! Move again!');
+							alert('Black king checked! Move again!');
 							$('#'+position.y+''+position.x).data('piece',oldPiece);
 							$('#'+position.y+''+position.x).find('img').attr('src', 'images/' + oldPiece + '.ico');
 
@@ -353,10 +341,6 @@ function placePieces() {
 							selectedPiece = "no_piece";
 							return;
 						}
-					}
-					else {
-						whiteChecked = false;
-						blackChecked = false;
 					}
 
 					turn = turn === "WHITE" ? "BLACK" : "WHITE";
@@ -386,15 +370,25 @@ function placePieces() {
 				if (selectedPiece === CHESS_PIECES.BLACK_KING) {
 					blackKingPos = position;
 				}
+
+				// Determine if either the white king or black king has been checkmated.
+
+				if (isWhiteCheckMate()) {
+					alert('Checkmate! Black Wins.');
+					$('#board').css('pointer-events','none');
+					return;
+				}
+
+				// Determine if either the white king or black king has been checked.
+
 				var whiteCheck = isWhiteCheck(whiteKingPos);
 				var blackCheck = isBlackCheck(blackKingPos);
 				
 				if (whiteCheck) {
 					alert('Check');
-					whiteChecked = true;
 
 					if (turn === "WHITE") {
-						alert('White king still checked! Move again!');
+						alert('White king checked! Move again!');
 
 						$('#'+position.y+''+position.x).find('img').remove();
 						$('#'+position.y+''+position.x).data('piece','empty');
@@ -405,6 +399,10 @@ function placePieces() {
 						$(img).width(pieceWidth);
 						$(img).height(pieceHeight);
 						img.appendTo('#'+selectedPiecePos.y+''+selectedPiecePos.x);
+
+						if (selectedPiece === CHESS_PIECES.WHITE_KING) {
+							whiteKingPos = selectedPiecePos;
+						}
 
 						selectedPiece = "no_piece";
 
@@ -413,10 +411,9 @@ function placePieces() {
 				}
 				else if (blackCheck) {
 					alert('Check');
-					blackChecked = true;
 
 					if (turn === "BLACK") {
-						alert('Black king still checked! Move again!');
+						alert('Black king checked! Move again!');
 
 						$('#'+position.y+''+position.x).find('img').remove();
 						$('#'+position.y+''+position.x).data('piece','empty');
@@ -428,14 +425,14 @@ function placePieces() {
 						$(img).height(pieceHeight);
 						img.appendTo('#'+selectedPiecePos.y+''+selectedPiecePos.x);
 
+						if (selectedPiece === CHESS_PIECES.BLACK_KING) {
+							blackKingPos = selectedPiecePos;
+						}
+
 						selectedPiece = "no_piece";
 
 						return;
 					}
-				}
-				else {
-					whiteChecked = false;
-					blackChecked = false;
 				}
 
 				turn = turn === "WHITE" ? "BLACK" : "WHITE";
@@ -679,6 +676,14 @@ function isWhiteCheck(pos) {
 		return true;
 	}
 
+	// Check for opponent's king in all directions around the king:
+	if ($('#'+(pos.y+1)+''+(pos.x)).data('piece') === CHESS_PIECES.BLACK_KING || $('#'+(pos.y-1)+''+(pos.x)).data('piece') === CHESS_PIECES.BLACK_KING ||
+		$('#'+(pos.y)+''+(pos.x+1)).data('piece') === CHESS_PIECES.BLACK_KING || $('#'+(pos.y)+''+(pos.x-1)).data('piece') === CHESS_PIECES.BLACK_KING || 
+		$('#'+(pos.y+1)+''+(pos.x+1)).data('piece') === CHESS_PIECES.BLACK_KING || $('#'+(pos.y+1)+''+(pos.x-1)).data('piece') === CHESS_PIECES.BLACK_KING || 
+		$('#'+(pos.y-1)+''+(pos.x-1)).data('piece') === CHESS_PIECES.BLACK_KING || $('#'+(pos.y-1)+''+(pos.x+1)).data('piece') === CHESS_PIECES.BLACK_KING) {
+		return true;
+	}
+
 	return false;
 }
 
@@ -798,7 +803,77 @@ function isBlackCheck(pos) {
 		return true;
 	}
 
+	// Check for opponent's king in all directions around the king:
+	if ($('#'+(pos.y+1)+''+(pos.x)).data('piece') === CHESS_PIECES.WHITE_KING || $('#'+(pos.y-1)+''+(pos.x)).data('piece') === CHESS_PIECES.WHITE_KING ||
+		$('#'+(pos.y)+''+(pos.x+1)).data('piece') === CHESS_PIECES.WHITE_KING || $('#'+(pos.y)+''+(pos.x-1)).data('piece') === CHESS_PIECES.WHITE_KING || 
+		$('#'+(pos.y+1)+''+(pos.x+1)).data('piece') === CHESS_PIECES.WHITE_KING || $('#'+(pos.y+1)+''+(pos.x-1)).data('piece') === CHESS_PIECES.WHITE_KING || 
+		$('#'+(pos.y-1)+''+(pos.x-1)).data('piece') === CHESS_PIECES.WHITE_KING || $('#'+(pos.y-1)+''+(pos.x+1)).data('piece') === CHESS_PIECES.WHITE_KING) {
+		return true;
+	}
+
 	return false;
+}
+
+function isWhiteCheckMate() {
+	if (!isWhiteCheck(whiteKingPos)) return false;
+
+	if (whiteKingPos.y+1 <= 8) {
+		if ($('#'+(whiteKingPos.y+1)+''+whiteKingPos.x).data().piece === "empty") {
+			var pos = new BoardPosition(whiteKingPos.y+1, whiteKingPos.x);
+			if (!isWhiteCheck(pos)) return false;
+		}
+	}
+
+	if (whiteKingPos.y-1 >= 1) {
+		if ($('#'+(whiteKingPos.y-1)+''+whiteKingPos.x).data().piece === "empty") {
+			var pos = new BoardPosition(whiteKingPos.y-1, whiteKingPos.x);
+			if (!isWhiteCheck(pos)) return false;
+		}
+	}
+
+	if (whiteKingPos.x+1 <= 8) {
+		if ($('#'+whiteKingPos.y+''+(whiteKingPos.x+1)).data().piece === "empty") {
+			var pos = new BoardPosition(whiteKingPos.y, whiteKingPos.x+1);
+			if (!isWhiteCheck(pos)) return false;
+		}
+	}
+
+	if (whiteKingPos.x-1 >= 1) {
+		if ($('#'+whiteKingPos.y+''+(whiteKingPos.x-1)).data().piece === "empty") {
+			var pos = new BoardPosition(whiteKingPos.y, whiteKingPos.x-1);
+			if (!isWhiteCheck(pos)) return false;
+		}
+	}
+
+	if (whiteKingPos.x+1 <= 8 && whiteKingPos.y+1 <= 8) {
+		if ($('#'+(whiteKingPos.y+1)+''+(whiteKingPos.x+1)).data().piece === "empty") {
+			var pos = new BoardPosition(whiteKingPos.y+1, whiteKingPos.x+1);
+			if (!isWhiteCheck(pos)) return false;
+		}
+	}
+
+	if (whiteKingPos.x-1 >= 1 && whiteKingPos.y+1 <= 8) {
+		if ($('#'+(whiteKingPos.y+1)+''+(whiteKingPos.x-1)).data().piece === "empty") {
+			var pos = new BoardPosition(whiteKingPos.y+1, whiteKingPos.x-1);
+			if (!isWhiteCheck(pos)) return false;
+		}
+	}
+
+	if (whiteKingPos.x-1 >= 1 && whiteKingPos.y-1 >= 1) {
+		if ($('#'+(whiteKingPos.y-1)+''+(whiteKingPos.x-1)).data().piece === "empty") {
+			var pos = new BoardPosition(whiteKingPos.y-1, whiteKingPos.x-1);
+			if (!isWhiteCheck(pos)) return false;
+		}
+	}
+
+	if (whiteKingPos.x+1 >= 1 && whiteKingPos.y-1 >= 1) {
+		if ($('#'+(whiteKingPos.y-1)+''+(whiteKingPos.x+1)).data().piece === "empty") {
+			var pos = new BoardPosition(whiteKingPos.y-1, whiteKingPos.x+1);
+			if (!isWhiteCheck(pos)) return false;
+		}
+	}
+
+	return true;
 }
 
 // Helper functions to determine if a piece is black or white.

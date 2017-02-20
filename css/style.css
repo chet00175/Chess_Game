@@ -1,11 +1,48 @@
+body {
+	background: #e8ede6;
+}
+
 #board {
 	width: 800px;
 	height: 800px;
-	position: absolute;
-	top:0;
-	bottom: 0;
-	left: 0;
-	right:0;
+	float: right;
+	margin-left: 25px;
+}
 
-	margin: auto;
+#menu {
+	background-color: #bac1ba;
+	font-size: 13pt;
+	width: 295px;
+	height: 400px;
+	float: left;
+	text-align: center;
+	position: relative;
+	top : 50px;
+}
+
+#menu ul {
+	margin :0;
+	padding: 0;
+	list-style-type: none;
+}
+
+#menu li {
+	display: block;
+	padding: .4em .8em;
+	margin: 0 0 .4em 0;
+	cursor: pointer;
+}
+
+#menu li:hover
+{
+	background-color: #369;
+	color: #FFF;
+}
+
+#interface {
+	width: 1150px;
+	position: absolute;
+	top : 50%;
+	left:50%;
+	transform: translate(-50%, -50%);
 }

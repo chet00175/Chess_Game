@@ -371,6 +371,37 @@ function placePieces() {
 						}
 					}
 
+					if ((whiteCheck && turn === "WHITE") || (blackCheck && turn === "BLACK")) {
+						// Don't update database since no move has been made.
+					}
+					else {
+						// AJAX call to server for creating a table to store all moves in this game.
+						if (moves === 0) {
+							$.ajax({
+								type: "POST",
+								url: "create_game_table.php",
+								async: false
+							});
+							
+							$.ajax({
+								type: "POST",
+								url: "add_move.php",
+								data : {startX : selectedPiecePos.x, startY : selectedPiecePos.y, endX : position.x, endY : position.y},
+								async: false
+							});					
+						}
+						else {
+							$.ajax({
+								type: "POST",
+								url: "add_move.php",
+								data : {startX : selectedPiecePos.x, startY : selectedPiecePos.y, endX : position.x, endY : position.y},
+								async: false
+							});	
+						}
+
+						moves++;
+					}
+
 					turn = turn === "WHITE" ? "BLACK" : "WHITE";
 
 					selectedPiece = "no_piece"; // set selected piece back to no piece again.
@@ -471,7 +502,7 @@ function placePieces() {
 				}
 
 				 if ((whiteCheck && turn === "WHITE") || (blackCheck && turn === "BLACK")) {
-
+				 	// Don't update database since no move has been made.
 				 }
 				 else {
 				 	// AJAX call to server for creating a table to store all moves in this game.
@@ -481,6 +512,21 @@ function placePieces() {
 				 			url: "create_game_table.php",
 				 			async: false
 				 		});
+
+				 		$.ajax({
+				 			type: "POST",
+				 			url: "add_move.php",
+				 			data : {startX : selectedPiecePos.x, startY : selectedPiecePos.y, endX : position.x, endY : position.y},
+				 			async: false
+				 		});					
+				 	}
+				 	else {
+				 		$.ajax({
+				 			type: "POST",
+				 			url: "add_move.php",
+				 			data : {startX : selectedPiecePos.x, startY : selectedPiecePos.y, endX : position.x, endY : position.y},
+				 			async: false
+				 		});	
 				 	}
 
 				 	moves++;

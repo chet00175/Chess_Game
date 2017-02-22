@@ -14,6 +14,9 @@ var turn = "WHITE";
 var whiteKingPos;
 var blackKingPos;
 
+// Keeping track of number of moves made.
+var moves = 0;
+
 
 
 
@@ -466,6 +469,22 @@ function placePieces() {
 						return;
 					}
 				}
+
+				 if ((whiteCheck && turn === "WHITE") || (blackCheck && turn === "BLACK")) {
+
+				 }
+				 else {
+				 	// AJAX call to server for creating a table to store all moves in this game.
+				 	if (moves === 0) {
+				 		$.ajax({
+				 			type: "POST",
+				 			url: "create_game_table.php",
+				 			async: false
+				 		});
+				 	}
+
+				 	moves++;
+				 }
 
 				turn = turn === "WHITE" ? "BLACK" : "WHITE";
 

@@ -19,7 +19,14 @@
 			<button type='button' id='right'>Right</button>
 		</div>
 		<script type="text/javascript">
-
+			$.ajax({
+				type: "POST",
+				url: "number_games.php",
+				async: false,
+				success: function(data) {
+					count = data;
+				}
+			});
 		</script>
 	</body>
 </html>	

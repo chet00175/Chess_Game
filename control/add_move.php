@@ -1,6 +1,6 @@
 <?php
 
-// Create connection
+// Create connection ('mysql' as placeholder password)
 $conn = mysqli_connect('localhost', 'root', 'mysql', 'chess_game');
 // Check connection
 if (!$conn) {

@@ -379,13 +379,13 @@ function placePieces() {
 						if (moves === 0) {
 							$.ajax({
 								type: "POST",
-								url: "create_game_table.php",
+								url: "control/create_game_table.php",
 								async: false
 							});
 							
 							$.ajax({
 								type: "POST",
-								url: "add_move.php",
+								url: "control/add_move.php",
 								data : {startX : selectedPiecePos.x, startY : selectedPiecePos.y, endX : position.x, endY : position.y},
 								async: false
 							});					
@@ -393,7 +393,7 @@ function placePieces() {
 						else {
 							$.ajax({
 								type: "POST",
-								url: "add_move.php",
+								url: "control/add_move.php",
 								data : {startX : selectedPiecePos.x, startY : selectedPiecePos.y, endX : position.x, endY : position.y},
 								async: false
 							});	
@@ -509,13 +509,13 @@ function placePieces() {
 				 	if (moves === 0) {
 				 		$.ajax({
 				 			type: "POST",
-				 			url: "create_game_table.php",
+				 			url: "control/create_game_table.php",
 				 			async: false
 				 		});
 
 				 		$.ajax({
 				 			type: "POST",
-				 			url: "add_move.php",
+				 			url: "control/add_move.php",
 				 			data : {startX : selectedPiecePos.x, startY : selectedPiecePos.y, endX : position.x, endY : position.y},
 				 			async: false
 				 		});					
@@ -523,7 +523,7 @@ function placePieces() {
 				 	else {
 				 		$.ajax({
 				 			type: "POST",
-				 			url: "add_move.php",
+				 			url: "control/add_move.php",
 				 			data : {startX : selectedPiecePos.x, startY : selectedPiecePos.y, endX : position.x, endY : position.y},
 				 			async: false
 				 		});	

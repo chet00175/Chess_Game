@@ -8,7 +8,7 @@ if (!$conn) {
 }
 
 // Remove old data (by dropping the database)
-$remove_db = "DROP DATABASE chess_game";
+$remove_db = "DROP DATABASE IF EXISTS chess_game";
 
 mysqli_query($conn, $remove_db);
 
@@ -16,6 +16,13 @@ mysqli_query($conn, $remove_db);
 $create_db = "CREATE DATABASE chess_game";
 
 mysqli_query($conn, $create_db);
+
+$create_game = "create table chess_game.games (
+	gameid int auto_increment primary key,
+	table_name varchar(50)
+);";
+
+mysqli_query($conn, $create_game);
 
 mysqli_close($conn);
 

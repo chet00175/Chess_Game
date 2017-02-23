@@ -24,9 +24,32 @@
 				url: "number_games.php",
 				async: false,
 				success: function(data) {
-					count = data;
+					count = data; // store total number of games played in 'count' variable
 				}
 			});
+
+			for (var i = 0; i < count; i++) {
+				var li = $('<li></li>');
+				li.html('Game ' + i);
+				li.attr('id','game' + i);
+
+				$.ajax({
+					type: "POST",
+					url: "get_array.php",
+					data : {n : i},
+					async: false,
+					success: function(data) {
+						array = JSON.parse(data);
+						$(li).data('table', array);
+					}
+				});
+
+				li.click(function(){
+					current_table = li.data('table');
+				});
+
+				li.appendTo('#list');
+			}
 		</script>
 	</body>
 </html>	

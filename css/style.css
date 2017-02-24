@@ -46,3 +46,31 @@ body {
 	left:50%;
 	transform: translate(-50%, -50%);
 }
+
+#buttons {
+	position: relative;
+	left:50%;
+}
+
+#buttons button {
+	margin: 20px;
+}
+
+#buttons + #interface {
+	margin-top: 20px;
+}
+
+#list {
+	background-color: #bac1ba;
+	font-size: 13pt;
+	width: 295px;
+	height: 400px;
+	float: left;
+	text-align: center;
+	position: relative;
+	top : 50px;
+}
+
+#games {
+	width: 120px;
+}

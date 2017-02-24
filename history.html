@@ -8,15 +8,17 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	</head>
 	<body>
-		<div id="interface">
-			<div id="list">
-				<ul></ul>
-			</div>
-			<div id="board"></div>
-		</div>
 		<div id ="buttons">
 			<button type='button' id='left'>Back</button>
 			<button type='button' id='right'>Forward</button>
+		</div>
+		<div id="interface">
+			<div id="list">
+				<b>Select a game to view:</b> <br> <br>
+				<select id="games" size="5" multiple>
+				</select>
+			</div>
+			<div id="board"></div>
 		</div>
 		<script type="text/javascript">
 			$.ajax({
@@ -29,9 +31,9 @@
 			});
 
 			for (var i = 0; i < count; i++) {
-				var li = $('<li></li>');
-				li.html('Game ' + i);
-				li.attr('id','game' + i);
+				var option = $('<option></option>');
+				option.html('Game ' + (i+1));
+				option.attr('id','game' + i);
 
 				$.ajax({
 					type: "POST",
@@ -40,15 +42,15 @@
 					async: false,
 					success: function(data) {
 						array = JSON.parse(data);
-						$(li).data('table', array);
+						$(option).data('table', array);
 					}
 				});
 
-				li.click(function(){
-					current_table = li.data('table'); // Stores the table of the game that is being viewed currently.
+				option.click(function(){
+					current_table = option.data('table'); // Stores the table of the game that is being viewed currently.
 				});
 
-				li.appendTo('#list');
+				option.appendTo('#games');
 			}
 
 			// create board and place pieces (cell click events are not needed for history)
@@ -59,7 +61,7 @@
 			placePieces();
 
 			// First game is displayed by default.
-			$('#game0').click();
+			$('#game0').attr("selected", "selected");
 
 
 

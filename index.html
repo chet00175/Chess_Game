@@ -32,6 +32,24 @@
 			$('#newgame').click(function() {
 				initGame(); // rearrange pieces in original position.
 			});
+
+			// View history of all games played so far.
+			$('#history').click(function() {
+				$.ajax({
+					type: "POST",
+					url: "control/check_history.php",
+					async: false,
+					success: function(data) {
+						if ($.trim(data) === "true") {
+							// If successful load history page
+							window.location = 'history.html';
+						}
+						else {
+							alert('No games played so far!');
+						}
+					}
+				});
+			});
 		</script>
 	</body>
 </html>	

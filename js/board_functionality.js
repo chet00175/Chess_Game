@@ -265,7 +265,10 @@ function placePieces() {
 	$(img).height(pieceHeight);
 	img.appendTo('#84');
 
-	// The click event function for each square on the board.
+}
+
+// Events for clicking on cells on the chess board.
+function cellClicks(pieceWidth, pieceHeight) {
 	$('.cell').click(function(){
 		var cellPiece = $(this).data().piece;
 		var position = $(this).data().position;
@@ -539,7 +542,6 @@ function placePieces() {
 			else alert("Cant move");
 		}
 	});
-
 }
 
 // Method for determining whether given chess piece move is valid. 
@@ -1053,4 +1055,7 @@ function initGame() {
 
 	// initial setup, place white and black pieces
 	placePieces();
+
+	// Enable click events for cells
+	cellClicks(50, 50);
 }

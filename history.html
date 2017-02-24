@@ -15,13 +15,13 @@
 			<div id="board"></div>
 		</div>
 		<div id ="buttons">
-			<button type='button' id='left'>Left</button>
-			<button type='button' id='right'>Right</button>
+			<button type='button' id='left'>Back</button>
+			<button type='button' id='right'>Forward</button>
 		</div>
 		<script type="text/javascript">
 			$.ajax({
 				type: "POST",
-				url: "number_games.php",
+				url: "control/number_games.php",
 				async: false,
 				success: function(data) {
 					count = data; // store total number of games played in 'count' variable
@@ -35,7 +35,7 @@
 
 				$.ajax({
 					type: "POST",
-					url: "get_array.php",
+					url: "control/get_tables.php",
 					data : {n : i},
 					async: false,
 					success: function(data) {
@@ -45,11 +45,65 @@
 				});
 
 				li.click(function(){
-					current_table = li.data('table');
+					current_table = li.data('table'); // Stores the table of the game that is being viewed currently.
 				});
 
 				li.appendTo('#list');
 			}
+
+			// create board and place pieces (cell click events are not needed for history)
+			var table = createBoard();
+			$('#board').empty().append(table);
+
+			// initial setup, place white and black pieces
+			placePieces();
+
+			// First game is displayed by default.
+			$('#game0').click();
+
+
+
+			var move = 1;
+			
+			$('#left').click(function(){
+				var startX = Number(current_table[move-1]['start_x']);
+				var endX = Number(current_table[move-1]['end_x']);
+				var startY = Number(current_table[move-1]['start_y']);
+				var endY = Number(current_table[move-1]['end_y']);
+
+				$('#'+endY+''+endX).find('img').remove();
+				var p = $('#'+endY+''+endX).data().piece;
+				$('#'+endY+''+endX).data('piece','empty');
+
+				$('#'+startY+''+startX).data('piece', p);
+				var img = $('<img>');
+				img.attr('src', 'images/' + p + '.ico');
+				$(img).width(50);
+				$(img).height(50);
+				img.appendTo('#'+startY+''+startX);
+
+				move--;
+			});
+
+			$('#right').click(function() {
+				var startX = Number(current_table[move-1]['start_x']);
+				var endX = Number(current_table[move-1]['end_x']);
+				var startY = Number(current_table[move-1]['start_y']);
+				var endY = Number(current_table[move-1]['end_y']);
+
+				$('#'+startY+''+startX).find('img').remove();
+				var p = $('#'+startY+''+startX).data().piece;
+				$('#'+startY+''+startX).data('piece','empty');
+
+				$('#'+endY+''+endX).data('piece', p);
+				var img = $('<img>');
+				img.attr('src', 'images/' + p + '.ico');
+				$(img).width(50);
+				$(img).height(50);
+				img.appendTo('#'+endY+''+endX);
+
+				move++; // Go forward
+			});
 		</script>
 	</body>
 </html>	

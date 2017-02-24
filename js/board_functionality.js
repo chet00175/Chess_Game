@@ -323,12 +323,14 @@ function cellClicks(pieceWidth, pieceHeight) {
 					if (isWhiteCheckMate()) {
 						alert('Checkmate! Black Wins.');
 						$('#board').css('pointer-events','none');
+						alert('Press New Game to play again');
 						return;
 					}
 
 					if (isBlackCheckMate()) {
 						alert('Checkmate! White Wins.');
 						$('#board').css('pointer-events','none');
+						alert('Press New Game to play again');
 						return;
 					}
 
@@ -438,12 +440,14 @@ function cellClicks(pieceWidth, pieceHeight) {
 				if (isWhiteCheckMate()) {
 					alert('Checkmate! Black Wins.');
 					$('#board').css('pointer-events','none');
+					alert('Press New Game to play again');
 					return;
 				}
 
 				if (isBlackCheckMate()) {
 					alert('Checkmate! White Wins.');
 					$('#board').css('pointer-events','none');
+					alert('Press New Game to play again');
 					return;
 				}
 

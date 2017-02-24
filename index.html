@@ -50,6 +50,10 @@
 					}
 				});
 			});
+
+			$(window).on("beforeunload",function(event) {
+    			return "Standard message";
+			});
 		</script>
 	</body>
 </html>	

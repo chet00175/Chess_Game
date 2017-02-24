@@ -107,5 +107,11 @@
 				move++; // Go forward
 			});
 		</script>
+
+		<script type="text/javascript">
+     		$(window).on("beforeunload",function(event) {
+    			return "Standard message";
+			});
+		</script>
 	</body>
 </html>	

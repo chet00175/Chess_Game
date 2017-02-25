@@ -21,6 +21,25 @@
 			<div id="board"></div>
 		</div>
 		<script type="text/javascript">
+			var move;
+			var flag;
+
+			var map = {};
+
+			function reset_moves() {
+				move = 0;
+				flag = "none";
+			}
+
+			function reset_game() {
+				// create board and place pieces (cell click events are not needed for history)
+				var table = createBoard();
+				$('#board').empty().append(table);
+
+				// initial setup, place white and black pieces
+				placePieces();
+			}
+
 			$.ajax({
 				type: "POST",
 				url: "control/number_games.php",
@@ -31,7 +50,7 @@
 			});
 
 			for (var i = 0; i < count; i++) {
-				var option = $('<option></option>');
+				option = $('<option></option>');
 				option.html('Game ' + (i+1));
 				option.attr('id','game' + i);
 
@@ -47,31 +66,28 @@
 				});
 
 				option.click(function(){
-					current_table = option.data('table'); // Stores the table of the game that is being viewed currently.
+					current_table = $(this).data('table'); // Stores the table of the game that is being viewed currently.
+					reset_moves();
+					reset_game();
 				});
 
 				option.appendTo('#games');
 			}
-
-			// create board and place pieces (cell click events are not needed for history)
-			var table = createBoard();
-			$('#board').empty().append(table);
-
-			// initial setup, place white and black pieces
-			placePieces();
-
-			// First game is displayed by default.
-			$('#game0').attr("selected", "selected");
-
-
-
-			var move = 1;
 			
+
+			// Events for moving forward and backwards to view the moves in a particular game.
+
 			$('#left').click(function(){
-				var startX = Number(current_table[move-1]['start_x']);
-				var endX = Number(current_table[move-1]['end_x']);
-				var startY = Number(current_table[move-1]['start_y']);
-				var endY = Number(current_table[move-1]['end_y']);
+				if (move < 0) return;
+
+				if (flag === "right") {
+					move--;
+				}
+
+				var startX = Number(current_table[move]['start_x']);
+				var endX = Number(current_table[move]['end_x']);
+				var startY = Number(current_table[move]['start_y']);
+				var endY = Number(current_table[move]['end_y']);
 
 				$('#'+endY+''+endX).find('img').remove();
 				var p = $('#'+endY+''+endX).data().piece;
@@ -85,13 +101,21 @@
 				img.appendTo('#'+startY+''+startX);
 
 				move--;
+
+				flag = "left";
 			});
 
 			$('#right').click(function() {
-				var startX = Number(current_table[move-1]['start_x']);
-				var endX = Number(current_table[move-1]['end_x']);
-				var startY = Number(current_table[move-1]['start_y']);
-				var endY = Number(current_table[move-1]['end_y']);
+				if (move > current_table.length-1) return;
+
+				if (flag === "left") {
+					move++;
+				}
+
+				var startX = Number(current_table[move]['start_x']);
+				var endX = Number(current_table[move]['end_x']);
+				var startY = Number(current_table[move]['start_y']);
+				var endY = Number(current_table[move]['end_y']);
 
 				$('#'+startY+''+startX).find('img').remove();
 				var p = $('#'+startY+''+startX).data().piece;
@@ -105,7 +129,17 @@
 				img.appendTo('#'+endY+''+endX);
 
 				move++; // Go forward
+
+				flag = "right";
 			});
+
+
+
+
+			// First game is displayed by default.
+			$('#game0').attr("selected", "selected");
+			$('#game0').click();
+
 		</script>
 
 		<script type="text/javascript">

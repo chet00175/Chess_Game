@@ -1063,3 +1063,12 @@ function initGame() {
 	// Enable click events for cells
 	cellClicks(50, 50);
 }
+
+// Start new game
+function newgame() {
+	$('#board').empty(); // Remove old board.
+	selectedPiece = "no_piece";
+	turn = "WHITE";
+	moves = 0;
+	initGame(); // rearrange pieces in original position.
+}

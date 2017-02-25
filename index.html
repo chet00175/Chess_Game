@@ -30,7 +30,7 @@
 		<script type="text/javascript">
 			// Start new game
 			$('#newgame').click(function() {
-				initGame(); // rearrange pieces in original position.
+				newgame();
 			});
 
 			// View history of all games played so far.
@@ -49,10 +49,6 @@
 						}
 					}
 				});
-			});
-
-			$(window).on("beforeunload",function(event) {
-    			return "Standard message";
 			});
 		</script>
 	</body>

@@ -9,6 +9,14 @@ body {
 	margin-left: 25px;
 }
 
+@media screen and (max-height: 888px) {
+
+    #board_table td {
+		width: 50px !important;
+		height: 50px !important;
+	}
+}
+
 #menu {
 	background-color: #bac1ba;
 	font-size: 13pt;

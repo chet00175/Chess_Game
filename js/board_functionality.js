@@ -27,7 +27,7 @@ function BoardPosition(x, y) {
 }
 
 function createBoard() {
-	var table = $("<table id='' cellspacing='0' cellpadding='0'></table>"); // might need cellspacing and cellpadding set to 0
+	var table = $("<table id='board_table' cellspacing='0' cellpadding='0'></table>"); // might need cellspacing and cellpadding set to 0
 
 	// Colours for the squares on the chess board.
 	var black_square = "#3aaf3c";
@@ -301,251 +301,173 @@ function cellClicks(pieceWidth, pieceHeight) {
 				$('#'+selectedPiecePos.y+''+selectedPiecePos.x).css('backgroundColor', '#00FF00'); // highlight the cell
 			}
 			else {
-				var validMove = movePiece(selectedPiece, selectedPiecePos, position, true); // Determine if the move is a valid one
-				if (validMove) {
-					$('#'+selectedPiecePos.y+''+selectedPiecePos.x).find('img').remove();
-					$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece','empty');
-					$('#'+selectedPiecePos.y+''+selectedPiecePos.x).css('backgroundColor', $('#'+selectedPiecePos.y+''+selectedPiecePos.x).data().backgroundColor); // Remove highlighting
-
-					var oldPiece = $('#'+position.y+''+position.x).data().piece;
-					$('#'+position.y+''+position.x).data('piece',selectedPiece);
-					$('#'+position.y+''+position.x).find('img').attr('src', 'images/' + selectedPiece + '.ico');
-
-					if (selectedPiece === CHESS_PIECES.WHITE_KING) {
-						whiteKingPos = position;
-					}
-					if (selectedPiece === CHESS_PIECES.BLACK_KING) {
-						blackKingPos = position;
-					}
-
-					// Determine if either the white king or black king has been checkmated.
-
-					if (isWhiteCheckMate()) {
-						alert('Checkmate! Black Wins.');
-						$('#board').css('pointer-events','none');
-						alert('Press New Game to play again');
-						return;
-					}
-
-					if (isBlackCheckMate()) {
-						alert('Checkmate! White Wins.');
-						$('#board').css('pointer-events','none');
-						alert('Press New Game to play again');
-						return;
-					}
-
-					var whiteCheck = isWhiteCheck(whiteKingPos);
-					var blackCheck = isBlackCheck(blackKingPos);
-					
-					if (whiteCheck) {
-						alert('Check');
-
-						if (turn === "WHITE") {
-							alert('White king checked! Move again!');
-							$('#'+position.y+''+position.x).data('piece',oldPiece);
-							$('#'+position.y+''+position.x).find('img').attr('src', 'images/' + oldPiece + '.ico');
-
-							$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece',selectedPiece);
-							$('#'+selectedPiecePos.y+''+selectedPiecePos.x).find('img').attr('src', 'images/' + selectedPiece + '.ico');
-							selectedPiece = "no_piece";
-
-							if (selectedPiece === CHESS_PIECES.WHITE_KING) {
-								whiteKingPos = selectedPiecePos;
-							}
-
-							return;
-						}
-					}
-					else if (blackCheck) {
-						alert('Check');
-
-						if (turn === "BLACK") {
-							alert('Black king checked! Move again!');
-							$('#'+position.y+''+position.x).data('piece',oldPiece);
-							$('#'+position.y+''+position.x).find('img').attr('src', 'images/' + oldPiece + '.ico');
-
-							$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece',selectedPiece);
-							$('#'+selectedPiecePos.y+''+selectedPiecePos.x).find('img').attr('src', 'images/' + selectedPiece + '.ico');
-
-							if (selectedPiece === CHESS_PIECES.BLACK_KING) {
-								blackKingPos = selectedPiecePos;
-							}
-
-							selectedPiece = "no_piece";
-							return;
-						}
-					}
-
-					if ((whiteCheck && turn === "WHITE") || (blackCheck && turn === "BLACK")) {
-						// Don't update database since no move has been made.
-					}
-					else {
-						// AJAX call to server for creating a table to store all moves in this game.
-						if (moves === 0) {
-							$.ajax({
-								type: "POST",
-								url: "control/create_game_table.php",
-								async: false
-							});
-							
-							$.ajax({
-								type: "POST",
-								url: "control/add_move.php",
-								data : {startX : selectedPiecePos.x, startY : selectedPiecePos.y, endX : position.x, endY : position.y},
-								async: false
-							});					
-						}
-						else {
-							$.ajax({
-								type: "POST",
-								url: "control/add_move.php",
-								data : {startX : selectedPiecePos.x, startY : selectedPiecePos.y, endX : position.x, endY : position.y},
-								async: false
-							});	
-						}
-
-						moves++;
-					}
-
-					turn = turn === "WHITE" ? "BLACK" : "WHITE";
-
-					selectedPiece = "no_piece"; // set selected piece back to no piece again.
-				}
-				else alert("Cant move");
+				moving_piece(false, position, pieceWidth, pieceHeight);
 			}
 		}
 		else if (selectedPiece !== "no_piece" && cellPiece === "empty") {
-			var validMove = movePiece(selectedPiece, selectedPiecePos, position, false);
-			if (validMove) {
-				$('#'+selectedPiecePos.y+''+selectedPiecePos.x).find('img').remove();
-				$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece','empty');
-				$('#'+selectedPiecePos.y+''+selectedPiecePos.x).css('backgroundColor', $('#'+selectedPiecePos.y+''+selectedPiecePos.x).data().backgroundColor); // Remove highlighting
-
-				$('#'+position.y+''+position.x).data('piece',selectedPiece);
-				var img = $('<img>');
-				img.attr('src', 'images/' + selectedPiece + '.ico');
-				$(img).width(pieceWidth);
-				$(img).height(pieceHeight);
-				img.appendTo('#'+position.y+''+position.x);
-
-				if (selectedPiece === CHESS_PIECES.WHITE_KING) {
-						whiteKingPos = position;
-				}
-				if (selectedPiece === CHESS_PIECES.BLACK_KING) {
-					blackKingPos = position;
-				}
-
-				// Determine if either the white king or black king has been checkmated.
-
-				if (isWhiteCheckMate()) {
-					alert('Checkmate! Black Wins.');
-					$('#board').css('pointer-events','none');
-					alert('Press New Game to play again');
-					return;
-				}
-
-				if (isBlackCheckMate()) {
-					alert('Checkmate! White Wins.');
-					$('#board').css('pointer-events','none');
-					alert('Press New Game to play again');
-					return;
-				}
-
-
-				// Determine if either the white king or black king has been checked.
-
-				var whiteCheck = isWhiteCheck(whiteKingPos);
-				var blackCheck = isBlackCheck(blackKingPos);
-				
-				if (whiteCheck) {
-					alert('Check');
-
-					if (turn === "WHITE") {
-						alert('White king checked! Move again!');
-
-						$('#'+position.y+''+position.x).find('img').remove();
-						$('#'+position.y+''+position.x).data('piece','empty');
-
-						$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece',selectedPiece);
-						var img = $('<img>');
-						img.attr('src', 'images/' + selectedPiece + '.ico');
-						$(img).width(pieceWidth);
-						$(img).height(pieceHeight);
-						img.appendTo('#'+selectedPiecePos.y+''+selectedPiecePos.x);
-
-						if (selectedPiece === CHESS_PIECES.WHITE_KING) {
-							whiteKingPos = selectedPiecePos;
-						}
-
-						selectedPiece = "no_piece";
-
-						return;
-					}
-				}
-				else if (blackCheck) {
-					alert('Check');
-
-					if (turn === "BLACK") {
-						alert('Black king checked! Move again!');
-
-						$('#'+position.y+''+position.x).find('img').remove();
-						$('#'+position.y+''+position.x).data('piece','empty');
-
-						$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece',selectedPiece);
-						var img = $('<img>');
-						img.attr('src', 'images/' + selectedPiece + '.ico');
-						$(img).width(pieceWidth);
-						$(img).height(pieceHeight);
-						img.appendTo('#'+selectedPiecePos.y+''+selectedPiecePos.x);
-
-						if (selectedPiece === CHESS_PIECES.BLACK_KING) {
-							blackKingPos = selectedPiecePos;
-						}
-
-						selectedPiece = "no_piece";
-
-						return;
-					}
-				}
-
-				 if ((whiteCheck && turn === "WHITE") || (blackCheck && turn === "BLACK")) {
-				 	// Don't update database since no move has been made.
-				 }
-				 else {
-				 	// AJAX call to server for creating a table to store all moves in this game.
-				 	if (moves === 0) {
-				 		$.ajax({
-				 			type: "POST",
-				 			url: "control/create_game_table.php",
-				 			async: false
-				 		});
-
-				 		$.ajax({
-				 			type: "POST",
-				 			url: "control/add_move.php",
-				 			data : {startX : selectedPiecePos.x, startY : selectedPiecePos.y, endX : position.x, endY : position.y},
-				 			async: false
-				 		});					
-				 	}
-				 	else {
-				 		$.ajax({
-				 			type: "POST",
-				 			url: "control/add_move.php",
-				 			data : {startX : selectedPiecePos.x, startY : selectedPiecePos.y, endX : position.x, endY : position.y},
-				 			async: false
-				 		});	
-				 	}
-
-				 	moves++;
-				 }
-
-				turn = turn === "WHITE" ? "BLACK" : "WHITE";
-
-				selectedPiece = "no_piece";
-			}
-			else alert("Cant move");
+			moving_piece(true, position, pieceWidth, pieceHeight);
 		}
 	});
+}
+
+// This function performs the operation of moving a piece. isCellEmpty is a boolean parameter and indicates whether the destination cell of the piece being moved is empty or has another piece.
+function moving_piece(isCellEmpty, position, pieceWidth, pieceHeight) {
+	var validMove = movePiece(selectedPiece, selectedPiecePos, position, !isCellEmpty);
+
+	if (validMove) {
+		$('#'+selectedPiecePos.y+''+selectedPiecePos.x).find('img').remove();
+		$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece','empty');
+		$('#'+selectedPiecePos.y+''+selectedPiecePos.x).css('backgroundColor', $('#'+selectedPiecePos.y+''+selectedPiecePos.x).data().backgroundColor); // Remove highlighting
+
+		if (isCellEmpty) {
+			$('#'+position.y+''+position.x).data('piece',selectedPiece);
+			var img = $('<img>');
+			img.attr('src', 'images/' + selectedPiece + '.ico');
+			$(img).width(pieceWidth);
+			$(img).height(pieceHeight);
+			img.appendTo('#'+position.y+''+position.x);
+		}
+		else {
+			var oldPiece = $('#'+position.y+''+position.x).data().piece;
+			$('#'+position.y+''+position.x).data('piece',selectedPiece);
+			$('#'+position.y+''+position.x).find('img').attr('src', 'images/' + selectedPiece + '.ico');
+		}
+
+		// Keep track of any changes in the position of the kings
+		if (selectedPiece === CHESS_PIECES.WHITE_KING) {
+				whiteKingPos = position;
+		}
+		if (selectedPiece === CHESS_PIECES.BLACK_KING) {
+			blackKingPos = position;
+		}
+
+		// Determine if either the white king or black king has been checkmated.
+
+		if (isWhiteCheckMate()) {
+			alert('Checkmate! Black Wins.');
+			$('#board').css('pointer-events','none');
+			alert('Press New Game to play again');
+			return;
+		}
+
+		if (isBlackCheckMate()) {
+			alert('Checkmate! White Wins.');
+			$('#board').css('pointer-events','none');
+			alert('Press New Game to play again');
+			return;
+		}
+
+
+		// Determine if either the white king or black king has been checked.
+
+		var whiteCheck = isWhiteCheck(whiteKingPos);
+		var blackCheck = isBlackCheck(blackKingPos);
+		
+		if (whiteCheck) {
+			alert('Check');
+
+			if (turn === "WHITE") {
+				alert('White king checked! Move again!');
+
+				if (isCellEmpty) {
+					$('#'+position.y+''+position.x).find('img').remove();
+					$('#'+position.y+''+position.x).data('piece','empty');
+
+					$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece',selectedPiece);
+					var img = $('<img>');
+					img.attr('src', 'images/' + selectedPiece + '.ico');
+					$(img).width(pieceWidth);
+					$(img).height(pieceHeight);
+					img.appendTo('#'+selectedPiecePos.y+''+selectedPiecePos.x);
+				}
+				else {
+					$('#'+position.y+''+position.x).data('piece',oldPiece);
+					$('#'+position.y+''+position.x).find('img').attr('src', 'images/' + oldPiece + '.ico');
+
+					$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece',selectedPiece);
+					$('#'+selectedPiecePos.y+''+selectedPiecePos.x).find('img').attr('src', 'images/' + selectedPiece + '.ico');
+				}
+
+				if (selectedPiece === CHESS_PIECES.WHITE_KING) {
+					whiteKingPos = selectedPiecePos;
+				}
+
+				selectedPiece = "no_piece";
+
+				return;
+			}
+		}
+		else if (blackCheck) {
+			alert('Check');
+
+			if (turn === "BLACK") {
+				alert('Black king checked! Move again!');
+
+				if (isCellEmpty) {
+					$('#'+position.y+''+position.x).find('img').remove();
+					$('#'+position.y+''+position.x).data('piece','empty');
+
+					$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece',selectedPiece);
+					var img = $('<img>');
+					img.attr('src', 'images/' + selectedPiece + '.ico');
+					$(img).width(pieceWidth);
+					$(img).height(pieceHeight);
+					img.appendTo('#'+selectedPiecePos.y+''+selectedPiecePos.x);
+				}
+				else {
+					$('#'+position.y+''+position.x).data('piece',oldPiece);
+					$('#'+position.y+''+position.x).find('img').attr('src', 'images/' + oldPiece + '.ico');
+
+					$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece',selectedPiece);
+					$('#'+selectedPiecePos.y+''+selectedPiecePos.x).find('img').attr('src', 'images/' + selectedPiece + '.ico');
+				}
+
+				if (selectedPiece === CHESS_PIECES.BLACK_KING) {
+					blackKingPos = selectedPiecePos;
+				}
+
+				selectedPiece = "no_piece";
+
+				return;
+			}
+		}
+
+		 if ((whiteCheck && turn === "WHITE") || (blackCheck && turn === "BLACK")) {
+		 	// Don't update database since no move has been made.
+		 }
+		 else {
+		 	// AJAX call to server for creating a table to store all moves in this game.
+		 	if (moves === 0) {
+		 		$.ajax({
+		 			type: "POST",
+		 			url: "control/create_game_table.php",
+		 			async: false
+		 		});
+
+		 		$.ajax({
+		 			type: "POST",
+		 			url: "control/add_move.php",
+		 			data : {startX : selectedPiecePos.x, startY : selectedPiecePos.y, endX : position.x, endY : position.y},
+		 			async: false
+		 		});					
+		 	}
+		 	else {
+		 		$.ajax({
+		 			type: "POST",
+		 			url: "control/add_move.php",
+		 			data : {startX : selectedPiecePos.x, startY : selectedPiecePos.y, endX : position.x, endY : position.y},
+		 			async: false
+		 		});	
+		 	}
+
+		 	moves++;
+		 }
+
+		turn = turn === "WHITE" ? "BLACK" : "WHITE";
+
+		selectedPiece = "no_piece";
+	}
+	else alert("Cant move");
 }
 
 // Method for determining whether given chess piece move is valid. 

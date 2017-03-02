@@ -12,8 +12,8 @@ body {
 @media screen and (max-height: 888px) {
 
     #board_table td {
-		width: 50px !important;
-		height: 50px !important;
+		width: 75px !important;
+		height: 75px !important;
 	}
 }
 

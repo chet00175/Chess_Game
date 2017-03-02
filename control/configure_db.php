@@ -1,7 +1,9 @@
 <?php
 
+include 'config.php';
+
 // Create connection ('mysql' as placeholder password)
-$conn = mysqli_connect('localhost', 'root', 'mysql');
+$conn = mysqli_connect($config['hostname'], $config['user'], $config['pass']);
 // Check connection
 if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());

@@ -37,13 +37,13 @@ function createBoard() {
 
 	// Create first row containing the letter labels:
 	var labelRow = $("<tr></tr>");
-	var empty = $("<td></td>")
+	var empty = $("<td></td>");
 	$(labelRow).append(empty);
 	var letters = "ABCDEFGH";
 	for(var i = 0; i < letters.length; i++) {
 		// Create label element in front marking the rows:
 		var colLabel = $("<td></td>");
-		$(colLabel).css('height',25);
+		$(colLabel).attr('class','coordinates_col');
 		$(colLabel).css('textAlign','center');
 		$(labelRow).append(colLabel);
 		$(colLabel).html(letters[i]);
@@ -57,7 +57,7 @@ function createBoard() {
 		
 		// Create label element in front marking the rows:
 		var rowLabel = $("<td></td>");
-		$(rowLabel).css('width',25);
+		$(rowLabel).attr('class','coordinates_row');
 		$(row).append(rowLabel);
 		$(rowLabel).html(i);
 		
@@ -66,9 +66,6 @@ function createBoard() {
 			$(cell).attr('id',i + '' + j);
 			$(cell).attr('class','cell');
 			$(cell).css('backgroundColor',colour);
-			$(cell).css('width',100);
-			$(cell).css('height',100);
-			$(cell).css('textAlign', 'center'); // Ensure chess pieces are on the centre of the square.
 			$(cell).data('piece', 'empty'); // indicates that the cell currently has no chess piece in it.
 			$(cell).data('position', new BoardPosition(j,i));
 			$(cell).data('backgroundColor', colour);
@@ -93,7 +90,7 @@ function createBoard() {
 
 		// Create label element in front marking the rows:
 		var rowLabel = $("<td></td>");
-		$(rowLabel).css('width',25);
+		$(rowLabel).attr('class','coordinates_row');
 		$(rowLabel).css('textAlign','right');
 		$(row).append(rowLabel);
 		$(rowLabel).html(i);
@@ -107,7 +104,7 @@ function createBoard() {
 	for(var i = 0; i < letters.length; i++) {
 		// Create label element in front marking the rows:
 		var colLabel = $("<td></td>");
-		$(colLabel).css('height',25);
+		$(colLabel).attr('class','coordinates_col');
 		$(colLabel).css('textAlign','center');
 		$(labelRow).append(colLabel);
 		$(colLabel).html(letters[i]);
@@ -153,116 +150,76 @@ function placePieces() {
 
 	// Draw pieces onto board
 
-	// Piece size:
-	var pieceWidth = 50;
-	var pieceHeight = 50;
-
 	for (var i = 1; i <= 8; i++) {
 		var img = $('<img>');
 		img.attr('src', 'images/WHITE_PAWN.ico');
-		$(img).width(pieceWidth);
-		$(img).height(pieceHeight);
 		img.appendTo('#2'+i);
 	}
 
 	for (var i = 1; i <= 8; i++) {
 		var img = $('<img>');
 		img.attr('src', 'images/BLACK_PAWN.ico');
-		$(img).width(pieceWidth);
-		$(img).height(pieceHeight);
 		img.appendTo('#7'+i);
 	}
 
 	// White capital (non-pawn) pieces
 	var img = $('<img>');
 	img.attr('src', 'images/WHITE_ROOK.ico');
-	$(img).width(pieceWidth);
-	$(img).height(pieceHeight);
 	img.appendTo('#18');
 	img = $('<img>');
 	img.attr('src', 'images/WHITE_ROOK.ico');
-	$(img).width(pieceWidth);
-	$(img).height(pieceHeight);
 	img.appendTo('#11');
 
 	img = $('<img>');
 	img.attr('src', 'images/WHITE_KNIGHT.ico');
-	$(img).width(pieceWidth);
-	$(img).height(pieceHeight);
 	img.appendTo('#17');
 	img = $('<img>');
 	img.attr('src', 'images/WHITE_KNIGHT.ico');
-	$(img).width(pieceWidth);
-	$(img).height(pieceHeight);
 	img.appendTo('#12');
 
 	img = $('<img>');
 	img.attr('src', 'images/WHITE_BISHOP.ico');
-	$(img).width(pieceWidth);
-	$(img).height(pieceHeight);
 	img.appendTo('#13');
 	img = $('<img>');
 	img.attr('src', 'images/WHITE_BISHOP.ico');
-	$(img).width(pieceWidth);
-	$(img).height(pieceHeight);
 	img.appendTo('#16');
 
 	img = $('<img>');
 	img.attr('src', 'images/WHITE_KING.ico');
-	$(img).width(pieceWidth);
-	$(img).height(pieceHeight);
 	img.appendTo('#15');
 
 	img = $('<img>');
 	img.attr('src', 'images/WHITE_QUEEN.ico');
-	$(img).width(pieceWidth);
-	$(img).height(pieceHeight);
 	img.appendTo('#14');
 
 	// Black capital (non-pawn) pieces
 	img = $('<img>');
 	img.attr('src', 'images/BLACK_ROOK.ico');
-	$(img).width(pieceWidth);
-	$(img).height(pieceHeight);
 	img.appendTo('#88');
 	img = $('<img>');
 	img.attr('src', 'images/BLACK_ROOK.ico');
-	$(img).width(pieceWidth);
-	$(img).height(pieceHeight);
 	img.appendTo('#81');
 
 	img = $('<img>');
 	img.attr('src', 'images/BLACK_KNIGHT.ico');
-	$(img).width(pieceWidth);
-	$(img).height(pieceHeight);
 	img.appendTo('#87');
 	img = $('<img>');
 	img.attr('src', 'images/BLACK_KNIGHT.ico');
-	$(img).width(pieceWidth);
-	$(img).height(pieceHeight);
 	img.appendTo('#82');
 
 	img = $('<img>');
 	img.attr('src', 'images/BLACK_BISHOP.ico');
-	$(img).width(pieceWidth);
-	$(img).height(pieceHeight);
 	img.appendTo('#83');
 	img = $('<img>');
 	img.attr('src', 'images/BLACK_BISHOP.ico');
-	$(img).width(pieceWidth);
-	$(img).height(pieceHeight);
 	img.appendTo('#86');
 
 	img = $('<img>');
 	img.attr('src', 'images/BLACK_KING.ico');
-	$(img).width(pieceWidth);
-	$(img).height(pieceHeight);
 	img.appendTo('#85');
 
 	img = $('<img>');
 	img.attr('src', 'images/BLACK_QUEEN.ico');
-	$(img).width(pieceWidth);
-	$(img).height(pieceHeight);
 	img.appendTo('#84');
 
 }

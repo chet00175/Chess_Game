@@ -280,8 +280,6 @@ function moving_piece(isCellEmpty, position, pieceWidth, pieceHeight) {
 			$('#'+position.y+''+position.x).data('piece',selectedPiece);
 			var img = $('<img>');
 			img.attr('src', 'images/' + selectedPiece + '.ico');
-			$(img).width(pieceWidth);
-			$(img).height(pieceHeight);
 			img.appendTo('#'+position.y+''+position.x);
 		}
 		else {
@@ -292,7 +290,7 @@ function moving_piece(isCellEmpty, position, pieceWidth, pieceHeight) {
 
 		// Keep track of any changes in the position of the kings
 		if (selectedPiece === CHESS_PIECES.WHITE_KING) {
-				whiteKingPos = position;
+			whiteKingPos = position;
 		}
 		if (selectedPiece === CHESS_PIECES.BLACK_KING) {
 			blackKingPos = position;
@@ -333,8 +331,6 @@ function moving_piece(isCellEmpty, position, pieceWidth, pieceHeight) {
 					$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece',selectedPiece);
 					var img = $('<img>');
 					img.attr('src', 'images/' + selectedPiece + '.ico');
-					$(img).width(pieceWidth);
-					$(img).height(pieceHeight);
 					img.appendTo('#'+selectedPiecePos.y+''+selectedPiecePos.x);
 				}
 				else {
@@ -367,8 +363,6 @@ function moving_piece(isCellEmpty, position, pieceWidth, pieceHeight) {
 					$('#'+selectedPiecePos.y+''+selectedPiecePos.x).data('piece',selectedPiece);
 					var img = $('<img>');
 					img.attr('src', 'images/' + selectedPiece + '.ico');
-					$(img).width(pieceWidth);
-					$(img).height(pieceHeight);
 					img.appendTo('#'+selectedPiecePos.y+''+selectedPiecePos.x);
 				}
 				else {

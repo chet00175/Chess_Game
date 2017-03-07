@@ -6,6 +6,7 @@
 		<link rel="Stylesheet" href="css/style.css" />
 		<script type = "text/javascript" src="js/board_functionality.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		<meta name="viewport" content="width=device-width,initial-scale=1">
 	</head>
 	<body>
 		<div id ="buttons">
@@ -96,8 +97,6 @@
 				$('#'+startY+''+startX).data('piece', p);
 				var img = $('<img>');
 				img.attr('src', 'images/' + p + '.ico');
-				$(img).width(50);
-				$(img).height(50);
 				img.appendTo('#'+startY+''+startX);
 
 				move--;
@@ -124,8 +123,6 @@
 				$('#'+endY+''+endX).data('piece', p);
 				var img = $('<img>');
 				img.attr('src', 'images/' + p + '.ico');
-				$(img).width(50);
-				$(img).height(50);
 				img.appendTo('#'+endY+''+endX);
 
 				move++; // Go forward

@@ -6,6 +6,7 @@ body {
 	width: 800px;
 	height: 800px;
 	float: right;
+	position: relative;
 	margin-left: 25px;
 }
 
@@ -34,8 +35,8 @@ body {
 	width: 295px;
 	height: 400px;
 	float: left;
-	text-align: center;
 	position: relative;
+	text-align: center;
 	top : 50px;
 }
 
@@ -56,6 +57,10 @@ body {
 {
 	background-color: #369;
 	color: #FFF;
+}
+
+#nav {
+	display: none;
 }
 
 #interface {
@@ -145,6 +150,51 @@ body {
 
 	#menu {
 		transform: translate(0%, -5%);
+	}
+}
+
+@media screen and (max-width: 500px) {
+	#menu {
+		display: none;
+	}
+
+	#nav {
+		display: block;
+		width: 100%;
+		height: 20%;
+		float: right;
+		background-color: #333;
+		padding-bottom: 5px;
+	}
+
+	#nav h3 {
+		float: left;
+		color: #f2f2f2;
+	}
+
+	.icon {
+		float: right;
+		color: #f2f2f2;
+	}
+
+	.cell {
+		width: 40px;
+		height: 40px;
+	}
+
+	.cell img {
+		width: 25px;
+		height: 25px;
+	}
+
+	#interface {
+		width: 100%;
+		height: 100%;
+		position: relative;
+	}
+
+	#board {
+		float: left;
 	}
 }
 

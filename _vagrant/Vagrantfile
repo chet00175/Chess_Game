@@ -12,6 +12,7 @@ Vagrant.configure("2") do |config|
   # Sync folder ‘data’ on host with folder /var/www/html on guest 
   config.vm.synced_folder "data", "/var/www/html"
 
+  # Calling shell script to setup LAMP environment in Ubuntu
   config.vm.provision "shell", path: "scripts.sh"
 end
 
